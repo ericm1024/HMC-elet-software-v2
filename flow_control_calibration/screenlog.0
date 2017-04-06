@@ -1,0 +1,1895 @@
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: ###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+212, -21.30
+214, -18.67
+213, -19.98
+213, -19.98
+212, -21.30
+213, -19.98
+213, -19.98
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 153
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+218, -13.42
+218, -13.42
+218, -13.42
+218, -13.42
+218, -13.42
+219, -12.10
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+200, -37.06
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+203, -33.12
+202, -34.43
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+204, -31.81
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+204, -31.81
+204, -31.81
+204, -31.81
+203, -33.12
+204, -31.81
+204, -31.81
+205, -30.49
+204, -31.81
+204, -31.81
+204, -31.81
+204, -31.81
+204, -31.81
+204, -31.81
+205, -30.49
+204, -31.81
+204, -31.81
+204, -31.81
+205, -30.49
+204, -31.81
+204, -31.81
+204, -31.81
+204, -31.81
+205, -30.49
+204, -31.81
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+200, -37.06
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+199, -38.37
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+205, -30.49
+204, -31.81
+204, -31.81
+204, -31.81
+204, -31.81
+204, -31.81
+204, -31.81
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+216, -16.04
+216, -16.04
+216, -16.04
+217, -14.73
+217, -14.73
+217, -14.73
+218, -13.42
+217, -14.73
+217, -14.73
+217, -14.73
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 153
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+224, -5.54
+224, -5.54
+225, -4.22
+224, -5.54
+224, -5.54
+224, -5.54
+225, -4.22
+224, -5.54
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+206, -29.18
+205, -30.49
+206, -29.18
+205, -30.49
+205, -30.49
+205, -30.49
+205, -30.49
+205, -30.49
+206, -29.18
+206, -29.18
+206, -29.18
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+222, -8.16
+222, -8.16
+222, -8.16
+222, -8.16
+222, -8.16
+223, -6.85
+223, -6.85
+222, -8.16
+222, -8.16
+222, -8.16
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+209, -25.24
+209, -25.24
+209, -25.24
+209, -25.24
+209, -25.24
+209, -25.24
+209, -25.24
+209, -25.24
+210, -23.92
+209, -25.24
+209, -25.24
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+226, -2.91
+226, -2.91
+227, -1.60
+227, -1.60
+227, -1.60
+226, -2.91
+226, -2.91
+226, -2.91
+226, -2.91
+226, -2.91
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+197, -41.00
+199, -38.37
+198, -39.69
+198, -39.69
+197, -41.00
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+200, -37.06
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+212, -21.30
+213, -19.98
+212, -21.30
+212, -21.30
+212, -21.30
+212, -21.30
+212, -21.30
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+231, 3.66
+231, 3.66
+231, 3.66
+231, 3.66
+231, 3.66
+231, 3.66
+232, 4.97
+231, 3.66
+231, 3.66
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 255
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+252, 31.24
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 255
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+199, -38.37
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 153
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+200, -37.06
+199, -38.37
+200, -37.06
+199, -38.37
+200, -37.06
+200, -37.06
+200, -37.06
+199, -38.37
+200, -37.06
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 170
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+201, -35.75
+201, -35.75
+200, -37.06
+200, -37.06
+201, -35.75
+200, -37.06
+200, -37.06
+201, -35.75
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 187
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+201, -35.75
+201, -35.75
+201, -35.75
+200, -37.06
+200, -37.06
+200, -37.06
+201, -35.75
+201, -35.75
+200, -37.06
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 204
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+200, -37.06
+201, -35.75
+200, -37.06
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 221
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 153
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+201, -35.75
+202, -34.43
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 170
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+202, -34.43
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+203, -33.12
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+200, -37.06
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+202, -34.43
+201, -35.75
+202, -34.43
+202, -34.43
+202, -34.43
+202, -34.43
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 153
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+204, -31.81
+204, -31.81
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+200, -37.06
+200, -37.06
+200, -37.06
+199, -38.37
+201, -35.75
+200, -37.06
+200, -37.06
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+203, -33.12
+204, -31.81
+203, -33.12
+203, -33.12
+204, -31.81
+203, -33.12
+204, -31.81
+203, -33.12
+203, -33.12
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+200, -37.06
+200, -37.06
+201, -35.75
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+198, -39.69
+200, -37.06
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+204, -31.81
+205, -30.49
+204, -31.81
+204, -31.81
+204, -31.81
+204, -31.81
+205, -30.49
+204, -31.81
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+201, -35.75
+200, -37.06
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+206, -29.18
+206, -29.18
+206, -29.18
+206, -29.18
+206, -29.18
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+201, -35.75
+202, -34.43
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+201, -35.75
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 136
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+208, -26.55
+207, -27.87
+208, -26.55
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 85
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+198, -39.69
+199, -38.37
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+202, -34.43
+202, -34.43
+203, -33.12
+202, -34.43
+202, -34.43
+202, -34.43
+202, -34.43
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 255
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+198, -39.69
+#### key to open to 17
+low control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Press any key to open to 34
+Press any key to open to 51
+Press any key to open to 68
+Press any key to open to 85
+Press any key to open to 102
+Press any key to open to 119
+Press any key to open to 136
+######
+
+Press any key to open to 17
+low control valve calibration test ######
+###################################################
+
+Press any key to open to 17
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17
+Press any key to open to 34
+Open to 34
+Press any key to open to 51
+Open to 51
+Press any key to open to 68
+Open to 68
+Press any key to open to 85
+Open to 85
+Press any key to open to 102
+Open to 102
+Press any key to open to 119
+Open to 119
+Press any key to open to 136
+Open to 136
+Press any key to open to 153
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+##########
+###################################################
+
+Press any key to open to 17
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17
+Press any key to open to 34
+Open to 34
+Press any key to open to 51
+Open to 51
+Press any key to open to 68
+Open to 68
+Press any key to open to 85
+Open to 85
+Press any key to open to 102
+Open to 102
+Press any key to open to 119
+Open to 119
+Press any key to open to 136
+Open to 136
+Press any key to open to 153
+##################
+
+Please pick a pwm value in [0,255]: trol valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: ###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 102
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+198, -39.69
+199, -38.37
+198, -39.69
+198, -39.69
+197, -41.00
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+198, -39.69
+199, -38.37
+199, -38.37
+200, -37.06
+200, -37.06
+199, -38.37
+200, -37.06
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+198, -39.69
+199, -38.37
+199, -38.37
+199, -38.37
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+200, -37.06
+199, -38.37
+200, -37.06
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+200, -37.06
+199, -38.37
+200, -37.06
+199, -38.37
+199, -38.37
+200, -37.06
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199#
+###################################################
+
+Please pick a pwm value in [0,255]: trol valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: ###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: ###################################################
+####### flow control valve calibration test #######
+#############################################
+
+Please pick a pwm value in [0,255]: trol valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: ###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 119
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+199, -38.37
+200, -37.06
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+200, -37.06
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+200, -37.06
+200, -37.06
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+199, -38.37
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: ##########
+
+Press any key to open to 17
+low control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17
+Press any key to open to 34
+Open to 34
+Press any key to open to 51
+Open to 51
+Press any key to open to 68
+Open to 68
+Press any key to open to 85
+Open to 85
+Press any key to open to 102
+Open to 102
+Press any key to open to 119
+Open to 119
+Press any key to open to 136
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+##########
+
+Press any key to open to 17
+low control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17. Press any key to open to 34
+Open to 34. Press any key to open to 51
+Open to 51. Press any key to open to 68
+Open to 68. Press any key to open to 85
+Open to 85. Press any key to open to 102
+Open to 102. Press any key to open to 119
+Open to 119. Press any key to open to 136
+Open to 136. Press any key to open to 153
+Open to 153. Press any key to open to 170
+Open to 170. Press any key to open to 187
+Open to 187. Press any key to open to 204
+Open to 204. Press any key to open to 221
+Open to 221. Press any key to open to 238
+Open to 238. Press any key to open to 255
+Open to 255. ###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17. Press any key to open to 34
+Open to 34. Press any key to open to 51
+Open to 51. Press any key to open to 68
+Open to 68. Press any key to open to 85
+Open to 85. Press any key to open to 102
+Open to 102. Press any key to open to 119
+Open to 119. Press any key to open to 136
+Open to 136. Press any key to open to 153
+Open to 153. Press any key to open to 170
+Open to 170. Press any key to open to 187
+Open to 187. Press any key to open to 204
+Open to 204. Press any key to open to 221
+Open to 221. Press any key to open to 238
+Open to 238. Press any key to open to 255
+Open to 255. ###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17. Press any key to open to 34
+Open to 34. Press any key to open to 51
+Open to 51. Press any key to open to 68
+Open to 68. Press any key to open to 85
+Open to 85. Press any key to open to 102
+Open to 102. Press any key to open to 119
+Open to 119. Press any key to open to 136
+Open to 136. Press any key to open to 153
+Open to 153. Press any key to open to 170
+Open to 170. Press any key to open to 187
+Open to 187. Press any key to open to 204
+Open to 204. Press any key to open to 221
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17. Press any key to open to 34
+Open to 34. Press any key to open to 51
+Open to 51. Press any key to open to 68
+Open to 68. Press any key to open to 85
+Open to 85. Press any key to open to 102
+Open to 102. Press any key to open to 119
+Open to 119. Press any key to open to 136
+Open to 136. Press any key to open to 153
+Open to 153. Press any key to open to 170
+Open to 170. Press any key to open to 187
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17. Press any key to open to 34
+Open to 34. Press any key to open to 51
+Open to 51. Press any key to open to 68
+Open to 68. Press any key to open to 85
+Open to 85. Press any key to open to 102
+Open to 102. Press any key to open to 119
+Open to 119. Press any key to open to 136
+Open to 136. Press any key to open to 153
+Open to 153. Press any key to open to 170
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17. Press any key to open to 34
+Open to 34. Press any key to open to 51
+Open to 51. Press any key to open to 68
+Open to 68. Press any key to open to 85
+Open to 85. Press any key to open to 102
+Open to 102. Press any key to open to 119
+Open to 119. Press any key to open to 136
+Open to 136. Press any key to open to 153
+Open to 153. Press any key to open to 170
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17. Press any key to open to 34
+Open to 34. Press any key to open to 51
+Open to 51. Press any key to open to 68
+Open to 68. Press any key to open to 85
+Open to 85. Press any key to open to 102
+Open to 102. Press any key to open to 119
+Open to 119. Press any key to open to 136
+Open to 136. Press any key to open to 153
+Open to 153. Press any key to open to 170
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17. Press any key to open to 34
+Open to 34. Press any key to open to 51
+Open to 51. Press any key to open to 68
+Open to 68. Press any key to open to 85
+Open to 85. Press any key to open to 102
+Open to 102. Press any key to open to 119
+Open to 119. Press any key to open to 136
+Open to 136. Press any key to open to 153
+Open to 153. Press any key to open to 170
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+Open to 17. Press any key to open to 34
+Open to 34. Press any key to open to 51
+Open to 51. Press any key to open to 68
+Open to 68. Press any key to open to 85
+Open to 85. Press any key to open to 102
+Open to 102. Press any key to open to 119
+Open to 119. Press any key to open to 136
+Open to 136. Press any key to open to 153
+Open to 153. Press any key to open to 170
+Open to 170. Press any key to open to 187
+Open to 187. Press any key to open to 204
+Open to 204. Press any key to open to 221
+Open to 221. Press any key to open to 238
+Open to 238. Press any key to open to 255
+Open to 255. ###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Press any key to open to 17
+###############
+
+##################
+####### flow control valve calibration test #######
+###################################################
+
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. Open to 85. Open to 102. Open to 119. Open to 136. Open to 153. Open to 170. Open to 187. Open to 204. Open to 221. Open to 238. Open to 255. ###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. #################
+
+##################
+####### flow control valve calibration test #######
+###################################################
+
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+Open to 153. 
+Open to 170. 
+Open to 187. 
+Open to 204. 
+Open to 221. 
+Open to 238. 
+Open to 255. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+Open to 153. 
+Open to 170. 
+Open to 187. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+Open to 153. 
+Open to 170. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+Open to 153. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+Open to 153. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+Open to 153. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+Open to 153. 
+Open to 170. 
+Open to 187. 
+Open to 204. 
+Open to 221. 
+Open to 238. 
+Open to 255. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 68. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+#######################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 17. 
+Open to 34. 
+Open to 51. 
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+Open to 153. 
+Open to 170. 
+Open to 187. 
+Open to 204. 
+Open to 221. 
+Open to 238. 
+Open to 255. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 17. 
+Open to 34. 
+Open to 51. 
+Open to 68. 
+Open to 85. 
+Open to 102. 
+Open to 119. 
+Open to 136. 
+Open to 153. 
+Open to 170. 
+Open to 187. 
+Open to 204. 
+Open to 221. 
+Open to 238. 
+Open to 255. 
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Open to 17. 
+Open to 34. 
+####
+
+Please pick a pwm value in [0,255]: trol valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: ###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 180
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+200, -37.06
+344, 152.08
+343, 150.77
+343, 150.77
+343, 150.77
+343, 150.77
+343, 150.77
+343, 150.77
+343, 150.77
+342, 149.46
+343, 150.77
+343, 150.77
+342, 149.46
+343, 150.77
+343, 150.77
+343, 150.77
+342, 149.46
+343, 150.77
+343, 150.77
+342, 149.46
+343, 150.77
+342, 149.46
+343, 150.77
+342, 149.46
+343, 150.77
+343, 150.77
+342, 149.46
+343, 150.77
+343, 150.77
+342, 149.46
+342, 149.46
+342, 149.46
+342, 149.46
+343, 150.77
+342, 149.46
+342, 149.46
+343, 150.77
+342, 149.46
+342, 149.46
+343, 150.77
+342, 149.46
+342, 149.46
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 255
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+200, -37.06
+354, 165.22
+353, 163.91
+353, 163.91
+353, 163.91
+353, 163.91
+352, 162.59
+352, 162.59
+352, 162.59
+###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 255
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+200, -37.06
+354, 165.22
+353, 163.91
+353, 163.91
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+353, 163.91
+352, 162.59
+353, 163.91
+353, 163.91
+353, 163.91
+352, 162.59
+352, 162.59
+353, 163.91
+353, 163.91
+353, 163.91
+352, 162.59
+353, 163.91
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+353, 163.91
+352, 162.59
+353, 163.91
+352, 162.59
+353, 163.91
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+353, 163.91
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352, 162.59
+352,###################################################
+####### flow control valve calibration test #######
+###################################################
+
+Please pick a pwm value in [0,255]: 
+opening to 255
+valve open. Pressure data follows
+digital value, un-calibrated PSI
+199, -38.37
+199, -38.37
+198, -39.69
+199, -38.37
