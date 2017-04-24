@@ -3,6 +3,8 @@
 void setup() {
   Serial.begin(9600);
 
+  setup_all_valves();
+
   // look all pretty n shit
   Serial.println("***********************************************");
   Serial.println("********** valve pin validation test **********");
@@ -21,19 +23,11 @@ void setup() {
 
     // toggle the pin
     Serial.println("Toggling pin, is the valve making noise/moving? (y/n)");
-    pinMode(pin, OUTPUT);
     for (;;) {
-      if (valve_is_flow(v)) {
-        analogWrite(pin, 255);
-        delay(500);
-        analogWrite(pin, 0);
-        delay(500);
-      } else {
-        digitalWrite(pin, 1);
-        delay(500);
-        digitalWrite(pin, 0);
-        delay(500);
-      }
+      open_valve(v);
+      delay(1000);
+      close_valve(v);
+      delay(1000);
 
       int data = Serial.peek();
       if (data == -1)

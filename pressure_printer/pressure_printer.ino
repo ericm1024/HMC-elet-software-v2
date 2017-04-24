@@ -1,4 +1,4 @@
-#include "elet.h"
+#include "elet_arduino.h"
 
 void setup() {
   Serial.begin(9600);
@@ -19,13 +19,9 @@ void loop() {
   // blue
   struct pressure_reading r2 = read_pressure(PS_FUEL);
 
-  Serial.print("pressure, ");
-  Serial.print(r1.digital);
-  Serial.print(", ");
+  Serial.print("ox=");
   Serial.print(r1.analog);
-  Serial.print(", ");
-  Serial.print(r2.digital);
-  Serial.print(", ");
+  Serial.print(", fuel=");
   Serial.println(r2.analog);
 
   delay(500);

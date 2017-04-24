@@ -35,47 +35,48 @@ struct valve_properties {
         const bool is_flow;
 };
 
+// 6, 12, 8, 10, 9, 11, 7
 static const struct valve_properties valve_properties[] {
         [OX_ON_OFF] = {
                 .name = "oxygen on/off",
                 .short_name = "oxoo",
-                .pin = 6,
+                .pin = 11,
                 .is_flow = false
         },
         [OX_BLEED] = {
                 .name = "oxygen bleed",
                 .short_name = "oxbl",
-                .pin = 12,
+                .pin = 9,
                 .is_flow = false,
         },
         [OX_FLOW] = {
                 .name = "oxygen flow control",
                 .short_name = "oxfl",
-                .pin = 8,
+                .pin = 10,
                 .is_flow = true
         },
         [N2_PURGE] = {
                 .name = "nitrogen purge",
                 .short_name = "n2pr",
-                .pin = 10,
+                .pin = 7,
                 .is_flow = false
         },
         [N2_ON_OFF] = {
                 .name = "nitrogen on/off",
                 .short_name = "n2oo",
-                .pin = 9,
+                .pin = 8,
                 .is_flow = false
         },
         [FUEL_FLOW] = {
                 .name = "fuel flow control",
                 .short_name = "fufl",
-                .pin = 11,
+                .pin = 6,
                 .is_flow = true
         },
         [FUEL_ON_OFF] = {
                 .name = "fuel on/off",
                 .short_name = "fuoo",
-                .pin = 7,
+                .pin = 12,
                 .is_flow = false
         }
 };
@@ -169,15 +170,15 @@ struct thermocouple_properties {
 static struct thermocouple_properties thermocouple_properties[] {
         [TC_OXYGEN] = {
                 .name = "oxygen",
-                .clk_pin = 48,
-                .cs_pin = 50,
-                .do_pin = 52
+                .clk_pin = 43,
+                .cs_pin = 42, // blue heat shrink
+                .do_pin = 44,
         },
         [TC_WATER] = {
                 .name = "water",
-                .clk_pin = 48,
-                .cs_pin = 46, // XXX: double check this
-                .do_pin = 52,
+                .clk_pin = 43,
+                .cs_pin = 45, // yellow heat shrink
+                .do_pin = 44,
         }
 };
 
@@ -198,8 +199,8 @@ struct load_cell_properties {
 };
 
 static struct load_cell_properties load_cell_props = {
-        .dout_pin = 7,
-        .clk_pin = 8
+        .dout_pin = 39,
+        .clk_pin = 38,
 };
 
 struct igniter {
@@ -229,10 +230,10 @@ struct igniter {
 };
 
 static struct igniter sys_igniter = {
-        .igniter_cont_ctl = 2,
-        .igniter_cont_sense = 0,
-        .igniter_fire_ctl_be_careful = 3,
-        .ignition_sense = 1
+        .igniter_cont_ctl = 4,
+        .igniter_cont_sense = 4,
+        .igniter_fire_ctl_be_careful = 5,
+        .ignition_sense = 5
 };
 
 enum ignition_status {

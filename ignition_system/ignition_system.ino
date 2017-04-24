@@ -1,4 +1,4 @@
-#include "elet.h"
+#include "elet_arduino.h"
 
 void setup() {
   Serial.begin(9600);

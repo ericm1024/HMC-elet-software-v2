@@ -1,25 +1,26 @@
-#include "Adafruit_MAX31855.h"
-
-#define MAXDO   48
-#define MAXCS   50
-#define MAXCLK  52
-
-Adafruit_MAX31855 thermocouple(MAXCLK, MAXCS, MAXDO);
+#include "elet_arduino.h"
 
 void setup() {  
   Serial.begin(9600);
+
+  thermocouples[TC_OXYGEN].begin();
+
+  delay(500);
   
-  Serial.println("MAX31855 test");
-  // wait for MAX chip to stabilize
+  thermocouples[TC_WATER].begin();
+
+  // wait for chip to chill
   delay(500);
 }
 
 void loop() {
-   double c = thermocouple.readFarenheit();
-   if (isnan(c)) {
-     Serial.println("Something wrong with thermocouple!");
-   }
-   Serial.println(c);
- 
-   delay(1000);
+  float oxT = read_thermocouple_f(TC_OXYGEN);
+  delay(10);
+  float waterT = read_thermocouple_f(TC_WATER);
+
+  Serial.print("ox=");
+  Serial.print(oxT);
+  Serial.print(", water=");
+  Serial.println(waterT);
+  delay(1000);
 }
