@@ -36,7 +36,7 @@ struct valve_properties {
 };
 
 // 6, 12, 8, 10, 9, 11, 7
-static const struct valve_properties valve_properties[] {
+static const struct valve_properties valve_properties[] = {
         [OX_ON_OFF] = {
                 .name = "oxygen on/off",
                 .short_name = "oxoo",
@@ -124,18 +124,18 @@ struct pressure_sensor_properties {
         const float offset;
 };
 
-static const struct pressure_sensor_properties pressure_sensor_properties[] {
+static const struct pressure_sensor_properties pressure_sensor_properties[] = {
         [PS_OXYGEN] = {
-                name : "oxygen (yellow)",
-                pin : 1,
-                slope : 1.222,
-                offset : -250.0
+                .name = "oxygen (yellow)",
+                .pin = 1,
+                .slope = 1.222,
+                .offset = -250.0
         },
         [PS_FUEL] = {
-                name : "fuel (blue)",
-                pin : 2,
-                slope : 1.222,
-                offset : -250.0
+                .name = "fuel (blue)",
+                .pin = 2,
+                .slope = 1.222,
+                .offset = -250.0
         }
 };
 
@@ -167,7 +167,7 @@ struct thermocouple_properties {
         const int8_t do_pin;
 };
 
-static struct thermocouple_properties thermocouple_properties[] {
+static struct thermocouple_properties thermocouple_properties[] = {
         [TC_OXYGEN] = {
                 .name = "oxygen",
                 .clk_pin = 43,
@@ -426,9 +426,6 @@ struct data_packet {
 // open for solenoid, and 1-255 mean open to that PWM value for flow ctl
 // valves. This command is only valid in the SS_DEBUG state.
 #define REQ_MOD_VALVE ((uint8_t)2)
-
-// XXX: possible other commands:
-// * modify purge timings
 
 // this packet is sent from the client to the arduino to tell it to do things
 struct req_packet {
