@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <sys/socket.h>
@@ -15,7 +16,7 @@
 #include "../elet.h"
 
 // exit, possibly with a message
-static void die(const char *reason, int err)
+static void __attribute__((noreturn)) die(const char *reason, int err)
 {
         if (reason) {
                 fprintf(stderr, "%s: %s\n", reason, strerror(err));
@@ -25,7 +26,8 @@ static void die(const char *reason, int err)
         }
 }
 
-static uint32_t process_packet(const uint8_t *pkt, int logfd)
+static uint32_t process_packet(const uint8_t *pkt, int logfd,
+                               enum system_state *sys_state)
 {
         struct packet_header *hdr = (struct packet_header *)pkt;
         uint32_t seq = hdr->seq;
@@ -38,18 +40,30 @@ static uint32_t process_packet(const uint8_t *pkt, int logfd)
                         goto die_bad_packet;
                 }
 
-                // data, seq, solenoid states, ox pwm state, fuel pwm state,
+                // we expect this bit to be zero
+                if (dpkt->state & 0x80)
+                        fprintf(stderr, "BAD: corrupted bit in dpkt->state\n", EIO);
+                printf("0x%x\n", dpkt->state);
+                
+                *sys_state = (enum system_state)
+                        ((dpkt->state & (0x7 << 3)) >> 3);
+
+                // data, timestamp, seq, solenoid states, ox pwm state, fuel pwm state,
                 // last ignition status, state, igniter good, ps1, ps2, t1,
-                // t2, thrust
+                // t2, thrust.
+                // 
+                // See comments in struct data_packet for bit twiddling
+                // explanation.
                 dprintf(logfd,
-                        "data,%u,%x,%u,%u,%x,%x,%d,%f,%f,%f,%f,%u\n",
+                        "data, %u, %u, %x, %u, %u, %x, %x, %d, %hu, %hu, %f, %f, %f\n",
+                        dpkt->header.timestamp,
                         seq,
                         dpkt->vlv_states,
                         dpkt->vlv_pwm_ox,
                         dpkt->vlv_pwm_fuel,
                         dpkt->state & 0x7,
-                        (dpkt->state & 0x18) >> 3,
-                        (dpkt->state & 0x2) >> 6,
+                        (dpkt->state & (0x7 << 3)) >> 3, 
+                        (dpkt->state & (0x1 << 6)) >> 6,
                         dpkt->pressures[0],
                         dpkt->pressures[1],
                         dpkt->temps[0],
@@ -77,34 +91,199 @@ static uint32_t process_packet(const uint8_t *pkt, int logfd)
 
 die_bad_packet:
         die("bad packet", EINVAL);
-        return -1U;
 }
 
 static uint32_t process_command(const char *buf, size_t size,
-                                uint32_t seq, int sd)
+                                uint32_t last_seq,
+                                enum system_state sys_state, int sd)
 {
-        uint32_t sent_seq = -1;
+        uint32_t sent_seq = last_seq + 1;
         struct req_packet pkt;
 
+        fprintf(stderr, "%s called, buf=%s\n", __func__, (const char *)buf);
+
         memset(&pkt, 0, sizeof pkt);
-        //pkt.hdr
+        pkt.header.len = sizeof pkt;
+        pkt.header.type = PT_REQ;
+        pkt.header.seq = sent_seq;
 
         // start the engine
-        if (strncmp(buf, "start-the-engine-everyone-is-safe", size) == 0) {
+        const char *cmd = "start-the-damn-engine";
+        size_t len = strlen(cmd);
+        if (strncmp(buf, cmd, len) == 0) {
+                buf += len;
 
+                // parse the burn-time argument
+                char *end = NULL;
+                errno = 0;
+                long t = strtol(buf, &end, 10);
+                if (errno)
+                        goto bad_command;
+
+                // the burn time argument should take up the rest of the
+                // command, so yell if we don't find a null byte at the end
+                if (*end != '\0')
+                        goto bad_command;
+
+                // make sure we're with our defined min/max burn time
+                if (t < REQ_CMD_START_MIN_BURN_TIME
+                    || t > REQ_CMD_START_MAX_BURN_TIME)
+                        goto bad_command;
+
+                // make sure we can fit into a uint32_t, even if the
+                // above constants get borked
+                if (t < 0 || t > 0xffffffffLL)
+                        goto bad_command;
+
+                pkt.cmd = REQ_CMD_START;
+
+                // this cast is safe becasuse of the above check
+                pkt.arg = (uint32_t)t;
+
+                fprintf(stderr, "starting the engine\n");
+
+                goto send_pkt;
 
         // stop the engine
-        } else if (strncmp(buf, "stop", size) == 0) {
+        } else if (strcmp(buf, "stop") == 0) {
+                pkt.cmd = REQ_CMD_STOP;
+
+                fprintf(stderr, "stopping the engine\n");
+
+                goto send_pkt;
 
         // valve manipulation
         } else if (strncmp(buf, "v ", 2) == 0) {
-                buf += 2;
+
+                if (sys_state != SS_READY) {
+                        fprintf(stderr,
+                                "%s: attempt to actuate valve while engine is running\n",
+                                __func__);
+                        goto bad_command;
+                }
                 
-        } else {
-                fprintf(stderr, "invalid command, resetting buffer\n");
+                buf += 2;
+                pkt.cmd = REQ_MOD_VALVE;
+
+                if (strcmp(buf, "off") == 0) {
+                        pkt.arg = 0xff;
+                } else {
+                        enum valve which_valve = NR_VALVES;
+
+                        // try to match a valve name
+                        bool found_valid_name = false;
+                        for (enum valve v = FIRST_VALVE; v < NR_VALVES;
+                             v = next_valve(v)) {
+                                const char *sname =
+                                        valve_properties[v].short_name;
+                                size_t len = strlen(sname);
+  
+                                // do we match this valve name?
+                                if (strncmp(buf, sname, len) == 0) {
+                                        found_valid_name = true;
+                                        which_valve = v;
+                                        buf += len;
+  
+                                        // another space
+                                        if (*buf++ != ' ')
+                                                goto bad_command;
+
+                                        break;
+                                }
+                        }
+  
+                        if (!found_valid_name)
+                                goto bad_command;
+  
+                        // match either 'on' or 'off'
+                        bool on = false;
+                        if (strcmp(buf, "on") == 0) {
+                                buf += 3;
+                                on = true;
+                        } else if (strcmp(buf, "off") == 0) {
+                                buf += 4;
+                                on = false;
+                        } else {
+                                goto bad_command;
+                        }
+ 
+                        // we should be at the end of a command now
+                        if (*buf != '\0')
+                                goto bad_command;
+
+                        // fill in the arg field of the packet
+                        uint32_t arg = 0;
+
+                        arg |= (uint32_t)which_valve & 0xff;
+
+                        // do what the command asked for
+                        if (on)
+                                arg |= valve_is_flow(which_valve) ? 0xff00
+                                        : 0x100;
+                        // else turn the valve off, which means set bits
+                        // 8-15 to 0, which they already are
+                        
+                        pkt.arg = arg;
+                }
+
+                fprintf(stderr, "modding a valve\n");
+                
+                goto send_pkt;
+        }
+        
+bad_command:
+        fprintf(stderr, "%s: bad command, resetting buffer\n", __func__);
+        return -1U;
+
+send_pkt:
+
+        // http://stackoverflow.com/q/8384388/3775803
+        ;
+
+        fprintf(stderr, "sending a command packet\n");
+
+        size_t sent = 0;
+        size_t remaining = sizeof pkt;
+        for (int i = 0; i < 1000; ++i) {
+                ssize_t ret = write(sd, &pkt, remaining);
+                if (ret == -1) {
+                        // this socket is marked as non-blocking, so there's
+                        // a very small chance that a write fails because
+                        // we can't send data (the chance is only small
+                        // because we're not sending a lot of data). In
+                        // this case, sleep for a  millisecond and keep
+                        // trying
+                        if (errno == EAGAIN || errno == EWOULDBLOCK) {
+
+                                // this is a weird situation, so let's be
+                                // chatty
+                                fprintf(stderr,
+                                        "write would block, retrying");
+
+                                struct timespec ts;
+                                memset(&ts, 0, sizeof ts);
+                                ts.tv_nsec = 1000*1000;
+                                int err = nanosleep(&ts, NULL);
+                                if (err == -1)
+                                        die("nanosleep", errno);
+                                continue;
+                        }
+
+                        // otherwise this was a bad error
+                        die("write", errno);
+                }
+
+                // normal case: the write succeeds--update our counters
+                sent += ret;
+                remaining -= ret;
+
+                // yayyy we wrote the whole packet!
+                if (remaining == 0)
+                        return sent_seq;
         }
 
-        return sent_seq;
+        // well shit, we got through 1000 tries and failed, this is bad
+        die("failed to write to socket after 1000 tries, giving up", EIO);
 }
 
 int main(int argc, char **argv)
@@ -128,9 +307,8 @@ int main(int argc, char **argv)
         // define the server address
         memset(&addr, 0, sizeof addr);
         addr.sin_family = AF_INET;
-        addr.sin_addr.s_addr = htonl((192 << 24) | (168 << 16)
-                                     | (1 << 8) | 100);
-        addr.sin_port = htons(420);
+        addr.sin_addr.s_addr = htonl(ELET_NET_ADDR);
+        addr.sin_port = htons(ELET_NET_PORT);
 
         // connect to the server (arduino)
         err = connect(sd, (struct sockaddr *)&addr, sizeof addr);
@@ -178,10 +356,13 @@ int main(int argc, char **argv)
         // if we don't here from the server for 2 seconds, something bad
         // happened. (this won't necessarily catch death if someone is
         // typing things on the command line constantly.
-        const int timeout_ms = 2000;
+        const int timeout_ms = -1; // XXX: change me
+
+        // the state we think the arduino system is in;
+        enum system_state sys_state = SS_READY;
 
         for (;;) {
-                const short events = POLLIN | POLLPRI;
+                const short events = POLLIN;
                 const short bad_revents = POLLERR | POLLHUP | POLLNVAL;
 
                 struct pollfd fds[] = {
@@ -229,9 +410,11 @@ int main(int argc, char **argv)
                                         continue;
 
                                 // okay we got a newline--process the command
+                                // (but null-terminate it first, to be nice)
+                                cmd_buf[i] = '\0';
                                 uint32_t s = process_command(cmd_buf,
-                                                             seq_sent + 1,
-                                                             i, sd);
+                                                             seq_sent, i,
+                                                             sys_state, sd);
                                 if (s != -1U)
                                         seq_sent = s;
 
@@ -250,8 +433,8 @@ int main(int argc, char **argv)
                                        bsize - (cmd_idx - i));
 
                                 // reset indices
-                                pkt_idx -= i;
-                                pkt_space += i;
+                                cmd_idx -= i;
+                                cmd_space += i;
 
                                 break;
                         }
@@ -285,7 +468,8 @@ int main(int argc, char **argv)
                                 // we read this whole packet
                                 if (pkt_idx >= len) {
                                         uint32_t s = process_packet(pkt_buf,
-                                                                    logfd);
+                                                                    logfd,
+                                                                    &sys_state);
 
                                         // uh-oh, the arduino sent back
                                         // a seq number less than what

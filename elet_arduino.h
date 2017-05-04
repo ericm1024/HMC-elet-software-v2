@@ -70,7 +70,7 @@ read_pressure(enum pressure_sensor p)
         return r;
 }
 
-Adafruit_MAX31855 thermocouples[NR_THERMOCOUPLES] = {
+static Adafruit_MAX31855 thermocouples[NR_THERMOCOUPLES] = {
         [TC_OXYGEN] = {thermocouple_properties[TC_OXYGEN].clk_pin,
                        thermocouple_properties[TC_OXYGEN].cs_pin,
                        thermocouple_properties[TC_OXYGEN].do_pin},
@@ -96,11 +96,16 @@ static Q2HX711 load_cell(load_cell_props.dout_pin, load_cell_props.clk_pin);
 
 static inline long read_load_cell()
 {
-        // perform calibration here if necessary
         return load_cell.read();
 }
 
-static enum ignition_status last_ign_status = IGN_FAIL_NO_IGNITION;
+static inline float read_load_cell_calibrated()
+{
+        return read_load_cell()*load_cell_props.slope
+                + load_cell_props.offset;
+}
+
+static enum ignition_status last_ign_status = IGN_NUM_STATUSES;
 
 // this is a helper so server_tx_all_data() can call it
 static inline int __attribute__((warn_unused_result))
