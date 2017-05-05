@@ -286,6 +286,15 @@ send_pkt:
         die("failed to write to socket after 1000 tries, giving up", EIO);
 }
 
+static void say_hello(int sd)
+{
+        struct hello_packet pkt;
+        memset(&pkt, 0, sizeof pkt);
+        pkt.len = sizeof pkt;
+        pkt.type = PT_HELLO;
+        pkt.seq = 1;
+}
+
 int main(int argc, char **argv)
 {
         int err, sd, flags, ret, logfd;
@@ -314,6 +323,9 @@ int main(int argc, char **argv)
         err = connect(sd, (struct sockaddr *)&addr, sizeof addr);
         if (err == -1)
                 die("connect failed", errno);
+
+        // send the hello packet so the sever picks us up
+        say_hello(sd);
 
         // set socket as non-blocking
         flags = fcntl(sd, F_GETFL);

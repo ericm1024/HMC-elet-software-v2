@@ -35,7 +35,7 @@ struct valve_properties {
         const bool is_flow;
 };
 
-// 6, 12, 8, 10, 9, 11, 7
+// 6, 12, 8, 2, 9, 11, 7
 static const struct valve_properties valve_properties[] = {
         [OX_ON_OFF] = {
                 .name = "oxygen on/off",
@@ -52,7 +52,7 @@ static const struct valve_properties valve_properties[] = {
         [OX_FLOW] = {
                 .name = "oxygen flow control",
                 .short_name = "oxfl",
-                .pin = 10,
+                .pin = 2,
                 .is_flow = true
         },
         [N2_PURGE] = {
@@ -238,7 +238,7 @@ struct igniter {
 };
 
 static struct igniter sys_igniter = {
-        .igniter_cont_ctl = 4,
+        .igniter_cont_ctl = 25,
         .igniter_cont_sense = 4,
         .igniter_fire_ctl_be_careful = 5,
         .ignition_sense = 5
@@ -338,6 +338,7 @@ enum system_state {
 #define PT_DATA ((uint8_t)1)
 #define PT_REQ ((uint8_t)2)
 #define PT_MESSAGE ((uint8_t)3)
+#define PT_HELLO ((uint8_t)4)
 
 // this header is at the start of every packet we send over the wire.
 // Packet parsing code should first parse the length and packet type out of
@@ -466,6 +467,10 @@ struct message_packet {
 
         // ascii null-terminated string. All bytes after null are undefined.
         uint8_t data[256];
+};
+
+struct hello_packet {
+        struct packet_header header;
 };
 
 #define ELET_NET_ADDR ((192UL << 24) | (168UL << 16) | (1UL << 8) | 100UL)

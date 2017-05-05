@@ -3,14 +3,14 @@
 static EthernetServer server(ELET_NET_PORT);
 
 static enum system_state sys_state = SS_READY;
+static unsigned long state_start_ms = 0;
 
 static uint32_t pkt_seq = 0;
 
 // we read a packet in parts, since it might take some time to transmit, so
 // we record the partial packet here.
 struct rx_state {
-        struct req_packet pkt;
-        uint8_t *ptr = NULL;
+        uint8_t buf[sizeof (struct req_packet)];
         size_t nread;
 };
 
@@ -30,7 +30,6 @@ static void server_eth_setup()
 
 static void reset_rx_state()
 {
-        memset(&rx_state.pkt, 0, sizeof rx_state.pkt);
         rx_state.ptr = (uint8_t*)&rx_state.pkt;
         rx_state.nread = 0;
 }
@@ -71,15 +70,8 @@ static void send_packet(EthernetClient *client, const void *_pkt, unsigned len)
         unsigned remaining = len;
         const uint8_t *pkt = (const uint8_t *)_pkt;
 
-        /*
-        while (client->connected() && remaining != 0) {
-                unsigned ret = client->write(pkt + sent, remaining);
-                remaining -= ret;
-                sent += ret;
-        }
-        */
         while (remaining != 0) {
-                unsigned ret = server.write(pkt + sent, remaining);
+                unsigned ret = client->write(pkt + sent, remaining);
                 remaining -= ret;
                 sent += ret;
         }
@@ -92,26 +84,74 @@ static void send_packet(EthernetClient *client, const void *_pkt, unsigned len)
         }
 }
 
-static unsigned long last_fire_start;
 static unsigned long fire_timeout;
 
-static void stop_engine()
+static void stop_engine(unsigned long time)
 {
+        static unsigned long state_start = 0;
+        static int stop_state = 0;
+
+        unsigned long time_this_state = state_start == 0 ? time
+                : time - state_start;
+        
         Serial.println("stopping engine");
 
-        // close the oxygen line
-        // XXX: do we want any delays here?
-        close_valve(OX_FLOW);
-        close_valve(OX_ON_OFF);
+        switch (stop_state) {
+        // step 0: close everything, start the purge
+        case 0:
+                close_valve(N2_ON_OFF);
+                close_valve(OX_FLOW);
+                close_valve(OX_ON_OFF);
+                close_valve(FUEL_FLOW);
+                close_valve(FUEL_ON_OFF);
+                open_valve(N2_PURGE);
+                goto out_next_stop_state;
 
-        // close the fuel line
-        close_valve(FUEL_FLOW);
-        close_valve(FUEL_ON_OFF);
+        // step 1: purge the engine with nitrogen for 5 seconds
+        case 1:
+                if (time_this_state < 5000)
+                        return;
+                close_valve(N2_PURGE);
+                goto out_next_stop_state;
 
-        // purge the engine with nitrogen
-        open_valve(N2_PURGE);
-        delay(5000);
-        close_valve(N2_PURGE);
+        // step 2: open ox bleed for 10-secs, after a 5-sec delay
+        case 2:
+                if (time_this_state < 5000)
+                        return;
+                open_valve(OX_BLEED);
+                goto out_next_stop_state;
+
+        // step 3: close ox bleed, after 10-sec bleed
+        case 3:
+                if (time_this_state < 10000)
+                        return;
+                close_valve(OX_BLEED);
+                goto out_next_stop_state;
+
+        // step 4: depressureize fuel, after 5-sec delay
+        case 4:
+                if (time_this_state < 5000)
+                        return;
+                open_valve(FUEL_FLOW);
+                goto out_next_stop_state;
+
+        // step 5: end fuel depressureization, after 10 seconds, and start
+        // a nitrogen purge
+        case 5:
+                if (time_this_state < 10000)
+                        return;
+                close_valve(FUEL_FLOW);
+                open_valve(N2_PURGE);
+                goto out_next_stop_state;
+
+        // step 6: stop the nitrogen purge after 5 seconds
+        case 6:
+                if (time_this_state < 5000)
+                        return;
+                close_valve(N2_PURGE);
+                goto out_next_stop_state;
+
+                
 
         // bleed the oxygen system
         delay(5000);
@@ -121,70 +161,116 @@ static void stop_engine()
         delay(5000);
 
         // XXX: some other shit here?
+
+out_next_stop_state:
+        ++stop_state;
+        state_start = time;
+        return;
+        
+out_end_state:
+        last_check_in = 0;
+        fire_state = 0;
+        sys_state = next_state;
 }
 
-static enum ignition_status start_engine()
+static void continue_fire(unsigned long time)
 {
-        for (enum valve v = FIRST_VALVE; v < NR_VALVES; v = next_valve(v))
-                if (valve_states[v] != 0)
-                        close_valve(v);
+        static unsigned long state_start = 0;
+        static int fire_state = 0;
+        enum system_state next_state;
 
-        Serial.println("starting engine");
+        unsigned long time_this_state = state_start == 0 ? time
+                : time - state_start;
 
-        enum ignition_status status = IGN_NUM_STATUSES;
+        switch (fire_state) {
+        // step 0: close all valves, test the igniter
+        case 0:
+                for (enum valve v = FIRST_VALVE; v < NR_VALVES; v = next_valve(v))
+                        if (valve_states[v] != 0)
+                                close_valve(v);
+                
+                Serial.println("starting engine");
 
-        int continuity;
+                // test the ignition sensor to make sure its present
+                int continuity = analogRead(sys_igniter.ignition_sense);
+                if (continuity == 0) {
+                        last_ign_status = IGN_FAIL_NO_ISENSE_WIRE;
+                        next_state = SS_READY;
+                        goto out_end_state;
+                }
 
-        // test the ignition sensor to make sure its present
-        continuity = analogRead(sys_igniter.ignition_sense);
-        if (continuity == 0) {
-                status = IGN_FAIL_NO_ISENSE_WIRE;
-                goto out;
+                continuity = igniter_test_continuity();
+
+                if (continuity == 0) {
+                        last_ign_status = IGN_FAIL_BAD_IGNITER;
+                        next_state = SS_READY;
+                        goto out_end_state;
+                }
+                break;
+
+        // step 1: open valve a bit
+        case 1:
+                // open the flow control valves a tiny bit
+                // XXX: chage these values
+                open_valve_to(OX_FLOW, 125);
+                open_valve_to(FUEL_FLOW, 125);
+
+                // pressurize the fuel
+                open_valve(N2_ON_OFF);
+                break;
+
+        // step 2: after 100ms, open the fuel and ox on-off valves
+        case 2:
+                if (time_this_state < 100)
+                        return;
+
+                // open the fuel and oxygen feed valves
+                open_valve(OX_ON_OFF);
+                open_valve(FUEL_ON_OFF);
+                break;
+
+        // step 3: after another 500ms, fire the igniter
+        case 3:
+                if (time_this_state < 500)
+                        return;
+
+                // fire the igniter. Don't give up the CPU here because
+                // we really want to turn this off quickly
+                digitalWrite(sys_igniter.igniter_fire_ctl_be_careful, HIGH);
+                delay(100);
+                digitalWrite(sys_igniter.igniter_fire_ctl_be_careful, LOW);
+                break;
+
+        // step 4: wait 3 seconds for the ignition sense wire to melt, then
+        // see if we had a successful ignition
+        case 4:
+                if (time_this_state < 3000)
+                        return;
+
+                continuity = analogRead(sys_igniter.ignition_sense);
+                if (continuity == 0) {
+                        // open the flow control valves to full bore
+                        open_valve(OX_FLOW);
+                        open_valve(FUEL_FLOW);
+                        last_ign_status = IGN_SUCCESS;
+                        next_state = SS_FIRE;
+                } else {
+                        // uh-oh: ignition failed
+                        next_state = SS_SAFING;
+                        last_ign_stateus = IGN_FAIL_NO_IGNITION;
+                }
+                goto out_end_state;
         }
 
-        continuity = igniter_test_continuity();
-        if (continuity == 0) {
-                last_ign_status = IGN_FAIL_BAD_IGNITER;
-                goto out;
-        }
-
-        // open the flow control valves a tiny bit
-        // XXX: chage these values
-        open_valve_to(OX_FLOW, 110);
-        open_valve_to(FUEL_FLOW, 110);
-
-        // pressurize the fuel
-        open_valve(N2_ON_OFF);
-        delay(100);
-
-        // open the fuel and oxygen feed valves
-        open_valve(OX_ON_OFF);
-        open_valve(FUEL_ON_OFF);
-        delay(500);
-
-        // fire the igniter
-        digitalWrite(sys_igniter.igniter_fire_ctl_be_careful, HIGH);
-        delay(1000); // XXX: change me
-        digitalWrite(sys_igniter.igniter_fire_ctl_be_careful, LOW);
-
-        // wait for the ignition sense wire to melt
-        delay(3000); // XXX: change me
-        continuity = analogRead(sys_igniter.ignition_sense);
-        if (continuity == 0) {
-                // open the flow control valves to full bore
-                open_valve(OX_FLOW);
-                open_valve(FUEL_FLOW);
-                status = IGN_SUCCESS;
-                last_fire_start = millis();
-        } else {
-                // uh-oh: ignition failed
-                stop_engine();
-                status = IGN_FAIL_NO_IGNITION;
-        }
-
-out:
-        last_ign_status = status;
-        return status;
+out_next_fire_state:
+        ++fire_state;
+        state_start = time;
+        return;
+        
+out_end_state:
+        state_start = 0;
+        fire_state = 0;
+        sys_state = next_state;
 }
 
 // this function is the meat of the arduino code. Here he handle a REQ
@@ -204,9 +290,8 @@ static void handle_req_packet(struct req_packet *pkt, EthernetClient *client)
                         goto the_default_is_to_yell;
 
                 sys_state = SS_SAFING;
-                stop_engine();
-                sys_state = SS_READY;
-                ++pkt_seq;
+                state_start_ms = millis();
+                pkt_seq = pkt->header.seq;
                 break;
 
         case REQ_CMD_START:
@@ -218,9 +303,8 @@ static void handle_req_packet(struct req_packet *pkt, EthernetClient *client)
                         goto the_default_is_to_yell;
 
                 sys_state = SS_FIRE;
+                state_start_ms = millis();
                 fire_timeout = pkt->arg * 1000UL;
-                start_engine();
-                ++pkt_seq;
                 break;
 
         case REQ_MOD_VALVE:
@@ -229,11 +313,6 @@ static void handle_req_packet(struct req_packet *pkt, EthernetClient *client)
 
                 valve = pkt->arg & 0xff;
                 val = (pkt->arg & 0xff00) >> 8;
-
-                Serial.print("Got REQ_MOD_VALVE: valve=");
-                Serial.print(valve);
-                Serial.print(", val=");
-                Serial.println(val);
 
                 if (valve == 0xff) {
                         for (enum valve v = FIRST_VALVE; v < NR_VALVES;
@@ -253,8 +332,11 @@ static void handle_req_packet(struct req_packet *pkt, EthernetClient *client)
                                 else
                                         close_valve(v);
                         }
+                } else {
+                        goto the_default_is_to_yell;
                 }
-                ++pkt_seq;
+
+                pkt_seq = pkt->header.seq;
                 break;
 
         the_default_is_to_yell:
@@ -277,40 +359,52 @@ static void handle_req_packet(struct req_packet *pkt, EthernetClient *client)
 
 static void rx_continue(EthernetClient *client)
 {
-        uint16_t size = sizeof rx_state.pkt;
         uint16_t hsize = sizeof rx_state.pkt.header;
-        
-        while (client->available()) {
-                char c = client->read();
-                if (c == -1)
-                        break;
+        uint16_t toread = min(sizeof rx_state.buf - nread,
+                              client->available());
 
-                *rx_state.ptr++ = (uint8_t)c;
-                rx_state.nread++;
+        int ret = client->read(&rx_state.buf, toread);
+        if (ret == -1) {
+                handle_dead_client(client);
+                return;
+        }
 
-                // we got the whole header, so validate it
-                if (rx_state.nread == hsize) {
-                        uint16_t len = rx_state.pkt.header.len;
-                        uint8_t type = rx_state.pkt.header.type;
+        rx_state.nread += ret;
 
-                        // the client sent us some bullshit, so close the
-                        // connection
-                        if (len != size || type != PT_REQ) {
-                                Serial.println("got bad header len or type");
-                                handle_dead_client(client);
+        // we got at least a header, so validate it
+        if (rx_state.nread >= hsize) {
+                uint16_t len = rx_state.pkt.header.len;
+                uint8_t type = rx_state.pkt.header.type;
+
+                // the client sent us some bullshit, so close the
+                // connection
+                if ((type != PT_REQ && type != PT_HELLO) ||
+                    (len != (sizeof struct req_packet)
+                     && len != (sizeof struct hello_packet))) {
+                        Serial.println("got bad header len or type");
+                        handle_dead_client(client);
+                        return;
+                }
+
+                // we got a whole packet -- sick! let's process it
+                if (rx_state.nread == len) {
+                        // XXX: packet CRCs
+                        // validate_pkt_ctc(&rx_state.pkt);
+
+                        // PT_HELLO packets have nothing in them, just update
+                        // the last seq
+                        if (type == PT_HELLO) {
+                                pkt_seq = pkt->header.seq;
                                 return;
                         }
 
-                // we got a whole packet -- sick! let's process it
-                } else if (rx_state.nread == size) {
-                        // XXX: packet CRCs
-                        // validate_pkt_ctc(&rx_state.pkt);
                         handle_req_packet(&rx_state.pkt, client);
                         reset_rx_state();
 
-                        // process at most one packet at a time, so
-                        // return here
-                        return;
+                // too much!!
+                } else if (rx_state.nread > len) {
+                        Serial.println("got nread > header.len");
+                        handle_dead_client(client);
                 }
         }
 }
@@ -366,31 +460,39 @@ static void gather_all_data()
 }
 
 static EthernetClient client;
-static unsigned long loop_count = 0;
+static int loop_count = 0;
 
 void loop()
 {
-        ++loop_count;
-
-        if (loop_count % 20 == 0 && !client)
-                client = server.available();
-
         gather_all_data();
 
-        //Serial.println("gathered all data");
-
+        // only re-try grabbing a client after a while, since it's
+        // expensive
+        if (++loop_count == 32) {
+                loop_count = 0;
+                if (!client)
+                        client = server.available();
+        }
+       
         if (client.connected()) {
-                Serial.println("got connected client");
-          
                 // receive and possibly process an incoming packet
                 rx_continue(&client);
+        
+                // transmit data from all sensors
+                send_packet(&client, &data_pkt, sizeof data_pkt);
         }
 
-        // transmit data from all sensors
-        send_packet(&client, &data_pkt, sizeof data_pkt);
+        unsigned long now = millis();
+        switch (sys_state) {
+        case SS_FIRE:
+                continue_fire(now);
+                break;
+                
+        case SS_SAFING:
+                continue_safing(now);
+                break;
 
-        if (sys_state == SS_FIRE && millis() > last_fire_start + fire_timeout) {
-                stop_engine();
-                sys_state = SS_READY;       
+        default:
+                break;
         }
 }

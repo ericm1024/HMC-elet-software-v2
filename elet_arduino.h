@@ -120,7 +120,7 @@ igniter_test_continuity()
 
         // let thing settle for a bit (XXX: not sure why we really need
         // this delay, but things don't work without it...)
-        delay(50);
+        delay(100);
         continuity = analogRead(sys_igniter.igniter_cont_sense);
 
         // turn off that circuit before we do anything else        
