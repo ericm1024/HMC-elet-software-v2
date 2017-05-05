@@ -43,7 +43,6 @@ static uint32_t process_packet(const uint8_t *pkt, int logfd,
                 // we expect this bit to be zero
                 if (dpkt->state & 0x80)
                         fprintf(stderr, "BAD: corrupted bit in dpkt->state\n", EIO);
-                printf("0x%x\n", dpkt->state);
                 
                 *sys_state = (enum system_state)
                         ((dpkt->state & (0x7 << 3)) >> 3);
@@ -55,7 +54,7 @@ static uint32_t process_packet(const uint8_t *pkt, int logfd,
                 // See comments in struct data_packet for bit twiddling
                 // explanation.
                 dprintf(logfd,
-                        "data, %u, %u, %x, %u, %u, %x, %x, %d, %hu, %hu, %f, %f, %f\n",
+                        "data, %u, %u, 0x%x, %u, %u, 0x%x, 0x%x, %d, %hu, %hu, %f, %f, %f\n",
                         dpkt->header.timestamp,
                         seq,
                         dpkt->vlv_states,
@@ -78,7 +77,8 @@ static uint32_t process_packet(const uint8_t *pkt, int logfd,
                         goto die_bad_packet;
                 }
 
-                dprintf(logfd, "message,%u,%s\n", seq, mpkt->data);
+                dprintf(logfd, "message, %u, %u, %s\n",
+                        mpkt->header.timestamp, seq, mpkt->data);
 
         } else {
                 fprintf(stderr, "%s: invalid packet type %x\n", __func__,
@@ -99,8 +99,6 @@ static uint32_t process_command(const char *buf, size_t size,
 {
         uint32_t sent_seq = last_seq + 1;
         struct req_packet pkt;
-
-        fprintf(stderr, "%s called, buf=%s\n", __func__, (const char *)buf);
 
         memset(&pkt, 0, sizeof pkt);
         pkt.header.len = sizeof pkt;
@@ -240,8 +238,6 @@ send_pkt:
         // http://stackoverflow.com/q/8384388/3775803
         ;
 
-        fprintf(stderr, "sending a command packet\n");
-
         size_t sent = 0;
         size_t remaining = sizeof pkt;
         for (int i = 0; i < 1000; ++i) {
@@ -290,9 +286,25 @@ static void say_hello(int sd)
 {
         struct hello_packet pkt;
         memset(&pkt, 0, sizeof pkt);
-        pkt.len = sizeof pkt;
-        pkt.type = PT_HELLO;
-        pkt.seq = 1;
+        pkt.header.len = sizeof pkt;
+        pkt.header.type = PT_HELLO;
+        pkt.header.seq = 1;
+
+        ssize_t ret = write(sd, &pkt, sizeof pkt);
+        if (ret == -1)
+                die("failed to say hello", errno);
+        else if (ret != sizeof pkt)
+                die("failed to write whole hello packet", EIO);
+}
+
+static int global_sd = -1;
+
+void sigint_handler(int sig)
+{
+        (void)sig;
+
+        close(global_sd);
+        exit(0);
 }
 
 int main(int argc, char **argv)
@@ -312,6 +324,12 @@ int main(int argc, char **argv)
         sd = socket(AF_INET, SOCK_STREAM, 0);
         if (sd == -1)
                 die("socket failed", errno);
+
+        // put the socket in a global so a signal handler can close it on
+        // Ctrl-C
+        global_sd = sd;
+        if (signal(SIGINT, sigint_handler) == SIG_ERR)
+                die("signal", errno);
 
         // define the server address
         memset(&addr, 0, sizeof addr);
@@ -362,8 +380,8 @@ int main(int argc, char **argv)
 
         struct packet_header *hdr = NULL;
 
-        uint32_t seq_acked = -1;
-        uint32_t seq_sent = 0;
+        uint32_t seq_acked = 0; 
+        uint32_t seq_sent = 1; // the "hello" packet we sent has seq = 1
 
         // if we don't here from the server for 2 seconds, something bad
         // happened. (this won't necessarily catch death if someone is
@@ -424,8 +442,8 @@ int main(int argc, char **argv)
                                 // okay we got a newline--process the command
                                 // (but null-terminate it first, to be nice)
                                 cmd_buf[i] = '\0';
-                                uint32_t s = process_command(cmd_buf,
-                                                             seq_sent, i,
+                                uint32_t s = process_command(cmd_buf, i,
+                                                             seq_sent,
                                                              sys_state, sd);
                                 if (s != -1U)
                                         seq_sent = s;
@@ -487,7 +505,7 @@ int main(int argc, char **argv)
                                         // a seq number less than what
                                         // we've seen so far: this probably
                                         // means it reset. This is probs bad
-                                        if (s < seq_acked) {
+                                        if (s < seq_acked || s == 0) {
                                                 fprintf(stderr,
                                                         "arduino reset!\n");
                                         }
