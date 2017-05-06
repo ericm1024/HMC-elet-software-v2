@@ -48,8 +48,8 @@ with open(fname, 'rb') as fd:
                          "state" : int(line[7], 16)})
             # 9, 10
             times.append(int(line[1])/1000.0)
-            ox_pressure.append(int(line[9]))
-            fuel_pressure.append(int(line[10]))
+            ox_pressure.append((int(line[9]) - 200)*1000.0/819.2)
+            fuel_pressure.append((int(line[10]) - 200)*1000.0/819.2)
             load.append(int(line[-1]))
 
         if data[0] == "message":
@@ -57,10 +57,13 @@ with open(fname, 'rb') as fd:
                              "msg", line[3]})
             
 plt.subplot(2, 1, 1)
-plt.plot(times, ox_pressure, times, fuel_pressure)
+ox, = plt.plot(times, ox_pressure)
+fuel, = plt.plot(times, fuel_pressure)
+
 plt.title("Pressure")
 plt.xlabel("time (seconds)")
 plt.ylabel("Pressure (digital)")
+plt.legend([ox, fuel], ["oxygen pressure", "fuel pressure"])
 
 plt.subplot(2, 1, 2)
 plt.plot(times, load)
@@ -69,3 +72,4 @@ plt.xlabel("time (seconds)")
 plt.ylabel("load (bullshit)")
 
 plt.show()
+
