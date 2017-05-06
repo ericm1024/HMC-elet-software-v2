@@ -54,7 +54,7 @@ static uint32_t process_packet(const uint8_t *pkt, int logfd,
                 // See comments in struct data_packet for bit twiddling
                 // explanation.
                 dprintf(logfd,
-                        "data, %u, %u, 0x%x, %u, %u, 0x%x, 0x%x, %d, %hu, %hu, %f, %f, %f\n",
+                        "data, %u, %u, 0x%x, %u, %u, 0x%x, 0x%x, %d, %hu, %hu, %f, %f, %u\n",
                         dpkt->header.timestamp,
                         seq,
                         dpkt->vlv_states,

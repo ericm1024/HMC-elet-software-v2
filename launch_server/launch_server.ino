@@ -101,69 +101,63 @@ static void send_packet(EthernetClient *client, const void *_pkt, unsigned len)
         }
 }
 
+
+// close n2 on off
+// close fuel on off
+// open nitrogen purge
+//
+// wait 1 second
+// close ox on off
+// close ox flow
+//
+// wait 1 seconds
+// open ox bleed
+//
+// wait 3 seconds
+// close nitrogen purge
+//
+// wait 7 seconds
+// close ox bleed
+// close fuel flow
 static void continue_safing(unsigned long time)
 {
         static unsigned long state_start = 0;
         static int safing_state = 0;
-        enum system_state next_state = SS_NUM_STATES;
 
         unsigned long time_this_state = state_start == 0 ? time
                 : time - state_start;
 
         switch (safing_state) {
-        // step 0: close everything, start the purge
         case 0:
                 close_valve(N2_ON_OFF);
-                close_valve(OX_FLOW);
-                close_valve(OX_ON_OFF);
                 close_valve(FUEL_FLOW);
-                close_valve(FUEL_ON_OFF);
                 open_valve(N2_PURGE);
                 goto out_next_safing_state;
 
-        // step 1: purge the engine with nitrogen for 5 seconds
         case 1:
-                if (time_this_state < 5000)
+                if (time_this_state < 1000)
                         return;
-                close_valve(N2_PURGE);
+                close_valve(OX_ON_OFF);
+                close_valve(OX_FLOW);
                 goto out_next_safing_state;
 
-        // step 2: start an ox bleed, after a 5-sec delay
         case 2:
-                if (time_this_state < 5000)
+                if (time_this_state < 1000)
                         return;
                 open_valve(OX_BLEED);
                 goto out_next_safing_state;
 
-        // step 3: close ox bleed, after 10-sec bleed
         case 3:
-                if (time_this_state < 10000)
-                        return;
-                close_valve(OX_BLEED);
-                goto out_next_safing_state;
-
-        // step 4: depressureize fuel, after 5-sec delay
-        case 4:
-                if (time_this_state < 5000)
-                        return;
-                open_valve(FUEL_FLOW);
-                goto out_next_safing_state;
-
-        // step 5: end fuel depressureization, after 10 seconds, and start
-        // a nitrogen purge
-        case 5:
-                if (time_this_state < 10000)
-                        return;
-                close_valve(FUEL_FLOW);
-                open_valve(N2_PURGE);
-                goto out_next_safing_state;
-
-        // step 6: stop the nitrogen purge after 5 seconds
-        case 6:
-                if (time_this_state < 5000)
+                if (time_this_state < 3000)
                         return;
                 close_valve(N2_PURGE);
-                next_state = SS_READY;
+                goto out_next_safing_state;
+
+        case 4:
+                if (time_this_state < 7000)
+                        return;
+                close_valve(OX_BLEED);
+                close_valve(FUEL_FLOW);
                 goto out_end_state;
 
         default:
@@ -179,11 +173,38 @@ out_next_safing_state:
 out_end_state:
         state_start = 0;
         safing_state = 0;
-        update_sys_state(next_state);
+        update_sys_state(SS_READY);
 }
 
 static unsigned long fire_timeout;
 
+// test igniter
+//
+// open n2 on off
+// wait 5 seconds
+// 
+// open ox flow
+// open nitrogen purge
+// 
+// wait 1 second
+// open ox on off
+//
+// wait 1 second
+// open fuel on-off
+//
+// wait 1 second
+// open fuel flow
+//
+// wait 1 second
+// close nitrogen purge
+//
+// wait 1 second
+// fire igniter
+//
+// wait 1 second
+// test success
+// open ox flow
+// open fuel flow
 static void continue_fire(unsigned long time)
 {
         static unsigned long state_start = 0;
@@ -202,12 +223,14 @@ static void continue_fire(unsigned long time)
                                 close_valve(v);
 
                 // test the ignition sensor to make sure its present
+                /*
                 continuity = analogRead(sys_igniter.ignition_sense);
                 if (continuity == 0) {
                         last_ign_status = IGN_FAIL_NO_ISENSE_WIRE;
                         next_state = SS_READY;
                         goto out_end_state;
                 }
+                */
 
                 continuity = igniter_test_continuity();
 
@@ -218,29 +241,46 @@ static void continue_fire(unsigned long time)
                 }
                 break;
 
-        // step 1: open valve a bit
         case 1:
-                // open the flow control valves a tiny bit
-                // XXX: chage these values
-                open_valve_to(OX_FLOW, 119);
-                open_valve_to(FUEL_FLOW, 110);
-
-                // pressurize the fuel
                 open_valve(N2_ON_OFF);
                 break;
-
-        // step 2: after 1 second, open the fuel and ox on-off valves
+                
         case 2:
+                if (time_this_state < 5000)
+                        return;
+
+                open_valve_to(OX_FLOW, 119);
+                open_valve(N2_PURGE);
+                break;
+
+        case 3:
                 if (time_this_state < 1000)
                         return;
 
-                // open the fuel and oxygen feed valves
                 open_valve(OX_ON_OFF);
+                break;
+
+        case 4:
+                if (time_this_state < 1000)
+                        return;
+
                 open_valve(FUEL_ON_OFF);
                 break;
 
-        // step 3: after another second, fire the igniter
-        case 3:
+        case 5:
+                if (time_this_state < 1000)
+                        return;
+
+                open_valve_to(FUEL_FLOW, 110);
+                break;
+
+        case 6:
+                if (time_this_state < 1000)
+                        return;
+
+                close_valve(N2_PURGE);
+
+        case 7:
                 if (time_this_state < 1000)
                         return;
 
@@ -251,12 +291,13 @@ static void continue_fire(unsigned long time)
                 digitalWrite(sys_igniter.igniter_fire_ctl_be_careful, LOW);
                 break;
 
-        // step 4: wait 1 second for the ignition sense wire to melt, then
-        // see if we had a successful ignition
-        case 4:
-                if (time_this_state < 1000)
+        case 8:
+                // "it doesn't have to be precise, it's all bullshit anyways"
+                // - Mike Chaffee, our lord and savior Jeezaus
+                if (time_this_state < 200)
                         return;
 
+                /*
                 continuity = analogRead(sys_igniter.ignition_sense);
                 if (continuity == 0) {
                         // open the flow control valves to full bore
@@ -270,12 +311,21 @@ static void continue_fire(unsigned long time)
                         last_ign_status = IGN_FAIL_NO_IGNITION;
                         goto out_end_state;
                 }
+                */
 
-        // setp 5: wait until the end of the fire timeout
-        case 5:
+                open_valve(OX_FLOW);
+                open_valve(FUEL_FLOW);
+                last_ign_status = IGN_SUCCESS;
+                goto out_next_fire_state;
+
+        case 9:
                 if (time_this_state < fire_timeout)
                         return;
                 next_state = SS_SAFING;
+                goto out_end_state;
+
+        default:
+                Serial.println("got weird fire_state");
                 goto out_end_state;
         }
 
@@ -442,8 +492,6 @@ static bool handle_req_packet(struct req_packet *pkt, EthernetClient *client)
 
 static void rx_continue(EthernetClient *client)
 {
-        Serial.println("rx_continue");
-  
         struct packet_header *hdr = (struct packet_header *)rx_state.buf;
         uint16_t hsize = sizeof *hdr;
         uint16_t avail = client->available();
@@ -533,7 +581,7 @@ static void gather_all_data()
         data_pkt.temps[TC_WATER] = 0.0;
         data_pkt.temps[TC_OXYGEN] = 0.0;
 
-        data_pkt.thrust = read_load_cell_calibrated();
+        data_pkt.thrust = read_load_cell();
 }
 
 static EthernetClient client;

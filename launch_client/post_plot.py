@@ -56,49 +56,16 @@ with open(fname, 'rb') as fd:
             messages.append({"time", int(line[1]),
                              "msg", line[3]})
             
-for i,line in enumerate(data):
-    if i == 0:
-        continue
+plt.subplot(2, 1, 1)
+plt.plot(times, ox_pressure, times, fuel_pressure)
+plt.title("Pressure")
+plt.xlabel("time (seconds)")
+plt.ylabel("Pressure (digital)")
 
-    last_line = data[i-1]
+plt.subplot(2, 1, 2)
+plt.plot(times, load)
+plt.title("load cell")
+plt.xlabel("time (seconds)")
+plt.ylabel("load (bullshit)")
 
-    ts = line["time"]/1000.0
-    # print out any and all valve state changes
-    vs = line["valve states"]
-    lvs = last_line["valve states"]
-    for i in range(nr_valves):
-        name = valve_names[i]
-        pwm = -1
-        last_pwm = -1
-        if is_pwm(name):
-            pwm = line["ox pwm"] if name == "oxfl" else line["fuel pwm"]
-            last_pwm = last_line["ox pwm"] if name == "oxfl" \
-                       else last_line["fuel pwm"]
-
-        on = (vs & (1 << i)) != 0
-        if (vs & (1 << i)) != (lvs & (1 << i)):
-            if is_pwm(name):
-                print ts, name.upper(), "ON" if on else "OFF", pwm
-
-            else:
-                print ts, name.upper(), "ON" if on else "OFF"
-
-        # if it's a flow control valve, we want to see pwm changes as well
-        if is_pwm(name) and on and pwm != last_pwm and last_pwm != 0:
-            print ts, name.upper(), "pwm", last_pwm, "to", pwm
-
-    # print out state changes
-    ss = line["state"]
-    lss = last_line["state"]
-    if ss != lss:
-        print ts, "state changed from",state_names[lss],"to",\
-            state_names[ss]
-
-    # print out if ignition status changed
-    istat = line["ign stat"]
-    listat = last_line["ign stat"]
-    if istat != listat:
-        print ts, "ignition status:", ign_stats[istat]
-
-for m in messages:
-    print m["time"], m["msg"]
+plt.show()

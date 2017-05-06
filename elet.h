@@ -443,7 +443,7 @@ struct data_packet {
         float temps[NR_THERMOCOUPLES];
 
         // thrust from the load cell in lbf.
-        float thrust;
+        uint32_t thrust;
 };
 
 // stop the engine. No arguments
