@@ -273,13 +273,16 @@ ignition_status_to_str(const enum ignition_status st)
 
 // Current state of the entire system. Our state diagram is
 //
-//                  (2)
-//               ________
-//  (1)         /        v
+//
+//     SS_DEPRESS 
+//         ^
+//   (7,8) |        (2)
+//         |     ________
+//  (1)    v    /        v
 //  --->  SS_READY       SS_FIRE
 //          ^   ^________/    /
-//       (5) \      (3)      / (4)
-//            \             v
+//     (5,6) \      (3)      / (4)
+//            v             v
 //               SS_SAFING
 //
 // The states have the following semantics and rules:
@@ -303,6 +306,9 @@ ignition_status_to_str(const enum ignition_status st)
 //               line. It is not safe to approach the engine in this state,
 //               but this state should be brief.
 //
+//   SS_DEPRESS  In this state we're depressurizing and emptying the fuel
+//               tank. This state is only entered manually, via a REQ_CMD_DEPRESS
+//
 // The state machine has the following transition table:
 //
 //   #    prev       next        reason
@@ -325,10 +331,22 @@ ignition_status_to_str(const enum ignition_status st)
 //
 //   5    SS_SAFING  SS_READY    This transition happens once automated
 //                               safing is complete.
+//
+//   6    SS_READY   SS_SAFING   This transition happens when someone sends
+//                               a REQ_CMD_STOP while we're in the ready
+//                               state. We might want to do this in the case
+//                               of a power failure or something else weird.
+//
+//   7    SS_READY   SS_DEPRESS  This transitions happens when the arduino
+//                               gets a REQ_CMD_DEPRESS command
+//   
+//   8    SS_DEPRESS SS_READY    This transition when the depressurization
+//                               finishes.
 enum system_state {
         SS_READY,
         SS_FIRE,
         SS_SAFING,
+        SS_DEPRESS,
         SS_NUM_STATES
 };
 
@@ -446,6 +464,12 @@ struct data_packet {
 //
 // This command is only valid in the SS_DEBUG state.
 #define REQ_MOD_VALVE ((uint8_t)2)
+
+#define REQ_CMD_DEPRESS_MIN_TIMEOUT 15
+#define REQ_CMD_DEPRESS_MAX_TIMEOUT 120
+
+// depressurize the fuel pressure vessel. Argument is drain time in seconds
+#define REQ_CMD_DEPRESS ((uint8_t)3)
 
 // this packet is sent from the client to the arduino to tell it to do things
 struct req_packet {

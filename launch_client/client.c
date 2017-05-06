@@ -150,6 +150,40 @@ static uint32_t process_command(const char *buf, size_t size,
 
                 goto send_pkt;
 
+        } else if (strncmp(buf, "depress-tank", strlen("depress-tank"))==0) {
+                buf += strlen("depress-tank");
+
+                // parse the depress-time argument
+                char *end = NULL;
+                errno = 0;
+                long t = strtol(buf, &end, 10);
+                if (errno)
+                        goto bad_command;
+
+                // the burn time argument should take up the rest of the
+                // command, so yell if we don't find a null byte at the end
+                if (*end != '\0')
+                        goto bad_command;
+
+                // make sure we're with our defined min/max burn time
+                if (t < REQ_CMD_DEPRESS_MIN_TIMEOUT
+                    || t > REQ_CMD_DEPRESS_MAX_TIMEOUT)
+                        goto bad_command;
+
+                // make sure we can fit into a uint32_t, even if the
+                // above constants get borked
+                if (t < 0 || t > 0xffffffffLL)
+                        goto bad_command;
+
+                pkt.cmd = REQ_CMD_DEPRESS;
+
+                // this cast is safe becasuse of the above check
+                pkt.arg = (uint32_t)t;
+
+                fprintf(stderr, "depressurizing the engine\n");
+
+                goto send_pkt;
+
         // valve manipulation
         } else if (strncmp(buf, "v ", 2) == 0) {
 

@@ -184,4 +184,6 @@ out:
         return ret;
 }
 
+#define FUEL_DRAIN_TIME_SECONDS 120
+
 #endif // ELET_ARDUINO_H

@@ -24,7 +24,8 @@ ign_stats = ["success",
              "failed: no ignition",
              "no ignition attempted"]
 
-state_names = ["ready", "firing", "safing", "num states (shouldn't happen)"]
+state_names = ["ready", "firing", "safing", "fuel depressurization",
+               "num states (shouldn't happen)"]
 
 messages = []
 data = []

@@ -67,6 +67,8 @@ handle_dead_client(EthernetClient *client)
         client->stop();
         reset_rx_state();
         pkt_seq = 0;
+
+        Serial.println("finished handling dead client");
 }
 
 static void
@@ -99,8 +101,6 @@ static void send_packet(EthernetClient *client, const void *_pkt, unsigned len)
         }
 }
 
-static unsigned long fire_timeout;
-
 static void continue_safing(unsigned long time)
 {
         static unsigned long state_start = 0;
@@ -109,8 +109,6 @@ static void continue_safing(unsigned long time)
 
         unsigned long time_this_state = state_start == 0 ? time
                 : time - state_start;
-        
-        Serial.println("stopping engine");
 
         switch (safing_state) {
         // step 0: close everything, start the purge
@@ -184,6 +182,8 @@ out_end_state:
         update_sys_state(next_state);
 }
 
+static unsigned long fire_timeout;
+
 static void continue_fire(unsigned long time)
 {
         static unsigned long state_start = 0;
@@ -193,8 +193,6 @@ static void continue_fire(unsigned long time)
 
         unsigned long time_this_state = state_start == 0 ? time
                 : time - state_start;
-
-        Serial.println("continue_fire");
 
         switch (fire_state) {
         // step 0: close all valves, test the igniter
@@ -224,16 +222,16 @@ static void continue_fire(unsigned long time)
         case 1:
                 // open the flow control valves a tiny bit
                 // XXX: chage these values
-                open_valve_to(OX_FLOW, 125);
-                open_valve_to(FUEL_FLOW, 125);
+                open_valve_to(OX_FLOW, 119);
+                open_valve_to(FUEL_FLOW, 110);
 
                 // pressurize the fuel
                 open_valve(N2_ON_OFF);
                 break;
 
-        // step 2: after 100ms, open the fuel and ox on-off valves
+        // step 2: after 1 second, open the fuel and ox on-off valves
         case 2:
-                if (time_this_state < 100)
+                if (time_this_state < 1000)
                         return;
 
                 // open the fuel and oxygen feed valves
@@ -241,9 +239,9 @@ static void continue_fire(unsigned long time)
                 open_valve(FUEL_ON_OFF);
                 break;
 
-        // step 3: after another 500ms, fire the igniter
+        // step 3: after another second, fire the igniter
         case 3:
-                if (time_this_state < 500)
+                if (time_this_state < 1000)
                         return;
 
                 // fire the igniter. Don't give up the CPU here because
@@ -253,10 +251,10 @@ static void continue_fire(unsigned long time)
                 digitalWrite(sys_igniter.igniter_fire_ctl_be_careful, LOW);
                 break;
 
-        // step 4: wait 3 seconds for the ignition sense wire to melt, then
+        // step 4: wait 1 second for the ignition sense wire to melt, then
         // see if we had a successful ignition
         case 4:
-                if (time_this_state < 3000)
+                if (time_this_state < 1000)
                         return;
 
                 continuity = analogRead(sys_igniter.ignition_sense);
@@ -290,6 +288,63 @@ out_end_state:
         state_start = 0;
         fire_state = 0;
         update_sys_state(next_state);
+}
+
+static unsigned long depress_timeout;
+
+static void continue_depress(unsigned long time)
+{
+        static unsigned long state_start = 0;
+        static int depress_state = 0;
+
+        unsigned long time_this_state = state_start == 0 ? time
+                : time - state_start;
+
+        switch (depress_state) {
+        // step 0: open the fuel system
+        case 0:
+                open_valve(N2_ON_OFF);
+                open_valve(FUEL_ON_OFF);
+                open_valve(FUEL_FLOW);
+                goto out_next_depress_state;
+
+        // step 1: stop the nitrogen feed system after the specified timeout
+        case 1:
+                if (time_this_state < depress_timeout)
+                        return;
+
+                close_valve(N2_ON_OFF);
+                goto out_next_depress_state;
+
+        // step 2: keep the fuel valves open for 30 seconds, then close then
+        // and start a nitrogen purge
+        case 2:
+                if (time_this_state < 30000)
+                        return;
+
+                close_valve(FUEL_ON_OFF);
+                close_valve(FUEL_FLOW);
+                open_valve(N2_PURGE);
+                goto out_next_depress_state;
+
+        // step 3: end the nitrogen purge after 5 seconds.
+        case 3:
+                if (time_this_state < 5000)
+                        return;
+
+                close_valve(N2_PURGE);
+                goto out_end_state;
+        }
+
+out_next_depress_state:
+        ++depress_state;
+        state_start = time;
+        return;
+        
+out_end_state:
+        state_start = 0;
+        depress_state = 0;
+        update_sys_state(SS_READY);
 }
 
 // this function is the meat of the arduino code. Here he handle a REQ
@@ -352,6 +407,18 @@ static bool handle_req_packet(struct req_packet *pkt, EthernetClient *client)
                 }
                 break;
 
+        case REQ_CMD_DEPRESS:
+                if (sys_state != SS_READY)
+                        goto the_default_is_to_yell;
+
+                if (pkt->arg < REQ_CMD_DEPRESS_MIN_TIMEOUT
+                    || pkt->arg > REQ_CMD_DEPRESS_MAX_TIMEOUT)
+                        goto the_default_is_to_yell;
+
+                update_sys_state(SS_DEPRESS);
+                depress_timeout = pkt->arg * 1000UL;
+                break;
+
         the_default_is_to_yell:
         default:
                 ;
@@ -375,6 +442,8 @@ static bool handle_req_packet(struct req_packet *pkt, EthernetClient *client)
 
 static void rx_continue(EthernetClient *client)
 {
+        Serial.println("rx_continue");
+  
         struct packet_header *hdr = (struct packet_header *)rx_state.buf;
         uint16_t hsize = sizeof *hdr;
         uint16_t avail = client->available();
@@ -450,11 +519,6 @@ static void gather_all_data()
         state |= (uint8_t)last_ign_status & 0x7;
         state |= ((uint8_t)sys_state & 0x7) << 3;
 
-        // we only guarentee a valid igniter state in the SS_READY
-        if (sys_state == SS_READY) {
-                int continuity = igniter_test_continuity();
-                state |= continuity > 0 ? ((uint8_t)1 << 6) : 0;
-        }
         data_pkt.state = state;
 
         // fill in pressure sensor data
@@ -466,7 +530,7 @@ static void gather_all_data()
 
         // fill in thermocouple readings. The OX thermo is borked, so don't
         // bother
-        data_pkt.temps[TC_WATER] = read_thermocouple_f(TC_WATER);
+        data_pkt.temps[TC_WATER] = 0.0;
         data_pkt.temps[TC_OXYGEN] = 0.0;
 
         data_pkt.thrust = read_load_cell_calibrated();
@@ -482,15 +546,17 @@ void loop()
         // only re-try grabbing a client after a while, since it's
         // expensive
         if (++loop_count == 32) {
+
                 loop_count = 0;
 
                 // only get new clinents in the SS_READY state because
                 // server.available() can be an expensive operation and
                 // we have other time-critical code
-                if (!client && sys_state == SS_READY)
+                if (!client && sys_state == SS_READY) {
                         client = server.available();
+                }
         }
-       
+
         if (client.connected()) {
                 // receive and possibly process an incoming packet
                 rx_continue(&client);
@@ -500,7 +566,7 @@ void loop()
         } else if (client) {
                 handle_dead_client(&client);
         }
-
+       
         unsigned long now = millis();
         switch (sys_state) {
         case SS_FIRE:
@@ -509,6 +575,10 @@ void loop()
                 
         case SS_SAFING:
                 continue_safing(now);
+                break;
+
+        case SS_DEPRESS:
+                continue_depress(now);
                 break;
 
         default:
